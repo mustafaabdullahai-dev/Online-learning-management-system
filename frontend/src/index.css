@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+/* This forces Tailwind to look for the 'dark' class on the HTML tag */
+@variant dark (&:where(.dark, .dark *));
+
+/* Optional: Set a default background so you can see the change immediately */
+@layer base {
+  body {
+    @apply bg-white text-black transition-colors duration-300;
+  }
+  /* When dark mode is active, apply these styles to body */
+  :root.dark body {
+    @apply bg-gray-900 text-white;
+  }
+}

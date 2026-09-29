@@ -1,0 +1,29 @@
+# --- Web framework ---
+Flask>=3.0.0
+Werkzeug>=3.0.0
+Flask-Cors>=4.0.0
+
+# --- Database ---
+Flask-PyMongo>=2.3.0
+pymongo>=4.6.0
+
+# --- Auth & security ---
+Flask-Bcrypt>=1.0.1
+PyJWT>=2.8.0
+itsdangerous>=2.1.2
+
+# --- Email ---
+Flask-Mail>=0.9.1
+
+# --- AI (Google Gemini) ---
+google-genai>=1.0.0
+google-generativeai>=0.8.0
+
+# --- 2FA (OTP / QR) ---
+pyotp>=2.9.0
+qrcode>=7.4.2
+Pillow>=10.0.0
+
+# --- Utilities ---
+requests>=2.31.0
+python-dotenv>=1.0.0
