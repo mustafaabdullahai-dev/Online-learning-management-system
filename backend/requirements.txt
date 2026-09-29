@@ -27,3 +27,6 @@ Pillow>=10.0.0
 # --- Utilities ---
 requests>=2.31.0
 python-dotenv>=1.0.0
+
+# --- Production server ---
+gunicorn>=22.0.0

@@ -193,11 +193,47 @@ To connect a deployed frontend to a hosted backend, add an external rewrite to `
 { "source": "/api/:path*", "destination": "https://YOUR-BACKEND/api/:path*" }
 ```
 
-### Backend
-Run it on any Python host with MongoDB access, set the environment variables above, and expose it over HTTPS. Use a production WSGI server (e.g. Gunicorn):
+### Database → MongoDB Atlas
+
+The backend needs a MongoDB database. For a hosted deployment use **MongoDB Atlas** (free M0 tier):
+
+1. Create a free cluster at https://cloud.mongodb.com
+2. **Database Access** → add a database user (username + password)
+3. **Network Access** → allow access from anywhere (`0.0.0.0/0`) for cloud hosts
+4. Copy the connection string, e.g.:
+
+   ```
+   mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/LMS_Database
+   ```
+
+**MongoDB Compass** is a desktop GUI client — it is not a server and is not "deployed". Install it from https://www.mongodb.com/try/download/compass and paste the **same Atlas connection string** to browse the `LMS_Database` collections (`users`, `courses`, `content`, ...).
+
+### Backend → Render (Docker)
+
+A `render.yaml` blueprint and `backend/Dockerfile` are included in this repo.
+
+1. In Render: **New → Blueprint** and pick this repository. Render reads `render.yaml`.
+2. Fill the prompted environment variables:
+   - `MONGO_URI` — your Atlas connection string
+   - `MAIL_USERNAME` / `MAIL_PASSWORD` — Gmail address + Google app password
+   - `GEMINI_API_KEY` — your Google Gemini API key
+   - `SECRET_KEY` — generated automatically by Render
+3. Deploy. Render builds the Docker image and runs Gunicorn on `$PORT`.
+
+> **Note:** Render's free plan uses an ephemeral filesystem, so uploaded files do not persist across deploys. Attach a persistent disk or use object storage for production.
+
+Seed the first super admin (Render → Shell after deploy):
 
 ```bash
-gunicorn -w 4 -b 0.0.0.0:5000 app:app
+python create_super_admin.py
+```
+
+### Point the frontend at the backend
+
+Add this rewrite **before** the catch-all in `frontend/vercel.json`, then redeploy:
+
+```json
+{ "source": "/api/:path*", "destination": "https://YOUR-BACKEND.onrender.com/api/:path*" }
 ```
 
 ---
